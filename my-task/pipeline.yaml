@@ -1,0 +1,26 @@
+---
+resources:
+  - name: concourse_test
+    type: git
+    icon: github
+    source:
+      uri: https://github.com/sirshendudutta/concourse_test.git
+      branch: master
+
+jobs:
+  - name: job
+    public: true
+    plan:
+      - get: concourse_test
+        trigger: true
+      - task: list-files
+        config:
+          inputs:
+            - name: concourse_test
+          platform: linux
+          image_resource:
+            type: registry-image
+            source: { repository: busybox }
+          run:
+            path: ls
+            args: ["-la", "./concourse_test"]
