@@ -11,8 +11,8 @@ resources:
     type: git
     icon: github
     source:
-      uri: https://github.com/devops-kg/concourse-pipelines.git
-      branch: main
+      uri: https://github.com/sirshendudutta/concourse_test.git
+      branch: master
 
 jobs:
   - name: job-hello-world
@@ -21,7 +21,17 @@ jobs:
     plan:
       - get: concourse-pipelines
         trigger: true
-      - get: mock
-        trigger: true
-      # - task: hello-world
-      #   file: concourse-pipelines/tasks/hello-world.yml
+      - get: concourse_test
+        trigger: false
+      - task: hello-world
+        file: concourse-pipelines/tasks/hello-world.yml
+      - task: simple-task
+        config:
+          platform: linux
+          image_resource:
+            type: registry-image
+            source: { repository: busybox }
+          run:
+            path: echo
+            args: ["Hello, world!"]
+        
